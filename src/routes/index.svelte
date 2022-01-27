@@ -19,45 +19,18 @@
 </script>
 
 <script>
+	import { userToken } from '../stores/stores';
+
 	export let posts;
 
-	let showCreatePost = false;
-	let btnText = '';
+	let isUserLogin;
+	$: isUserLogin = false;
 
-	const toggleCreatePost = () => {
-		showCreatePost = !showCreatePost;
-	};
+	console.log($userToken);
 
-	$: if (!showCreatePost) {
-		btnText = 'Create New Post';
-	} else {
-		btnText = 'Close Form';
+	if ($userToken !== null) {
+		isUserLogin = true;
 	}
-
-	const post = {
-		title: '',
-		desc: ''
-	};
-
-	const createNewPost = async () => {
-		if (post.title === '' || post.desc === '') {
-			console.log('Post title and description are required');
-			return;
-		}
-
-		// save the post
-		const res = await fetch('/api/posts', {
-			method: 'POST',
-			headers: {
-				'Content-Type': 'application/json'
-			},
-			body: JSON.stringify(post)
-		});
-
-		const response = await res.json();
-
-		console.log(response);
-	};
 </script>
 
 <svelte:head>
@@ -67,42 +40,21 @@
 <section class="container mx-auto p-8">
 	<div class="flex justify-between items-center h-fit">
 		<h1 class="text-3xl font-bold mb-8">Posts</h1>
-		<button
-			on:click={toggleCreatePost}
-			class=" bg-blue-500 text-white text-md  font-semibold p-2 rounded-md w-fit"
-		>
-			{btnText}
-		</button>
-	</div>
-
-	{#if showCreatePost}
-		<form class="mb-10" on:submit|preventDefault={createNewPost}>
-			<div class="mb-4">
-				<label for="title" class="font-semibold block mb-2 ">Post Title</label>
-				<input
-					type="text"
-					name="title"
-					id="title"
-					class="block rounded-md w-full"
-					bind:value={post.title}
-				/>
-			</div>
-			<div class="mb-4">
-				<label for="title" class="font-semibold block mb-2 ">Post Description</label>
-				<textarea
-					name="desc"
-					id="desc"
-					cols="30"
-					rows="5"
-					class="block rounded-md w-full"
-					bind:value={post.desc}
-				/>
-			</div>
-			<button class=" bg-blue-500 text-white text-md  font-semibold p-2 rounded-md w-full">
+		{#if isUserLogin}
+			<a
+				href="/createPost"
+				class="bg-blue-500 text-white text-md  font-semibold p-2 rounded-md w-fit"
+			>
 				Create New Post
-			</button>
-		</form>
-	{/if}
+			</a>
+		{:else}
+			<a
+				href="/register"
+				class="bg-blue-500 text-white text-md  font-semibold p-2 rounded-md w-fit"
+			>
+				Register / Login
+			</a>{/if}
+	</div>
 
 	{#each posts as post}
 		<div class="bg-white p-4 mb-4 rounded-md shadow-md">

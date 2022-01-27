@@ -21,7 +21,7 @@
 	export let post;
 </script>
 
-<section class="py-8">
+<section class="container mx-auto p-8">
 	<a
 		class="flex items-center bg-blue-500 text-white text-sm  font-semibold p-2 rounded-md w-fit"
 		href="/"

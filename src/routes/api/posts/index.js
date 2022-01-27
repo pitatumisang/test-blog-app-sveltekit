@@ -18,10 +18,7 @@ export const post = async ({ request }) => {
 		headers: {
 			'Content-Type': 'application/json'
 		},
-		body: JSON.stringify(post),
-		user: {
-			userId: 1
-		}
+		body: JSON.stringify(post)
 	});
 
 	return {
