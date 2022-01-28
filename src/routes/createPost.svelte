@@ -1,4 +1,6 @@
 <script>
+	import { userToken } from '../stores/stores';
+
 	const post = {
 		title: '',
 		desc: ''
@@ -28,10 +30,15 @@
 			headers: {
 				'Content-Type': 'application/json'
 			},
-			body: JSON.stringify(post)
+			body: JSON.stringify({ post, userToken: $userToken })
 		});
 
 		const { success, msg } = await res.json();
+
+		if (success) {
+			post.title = '';
+			post.desc = '';
+		}
 
 		isAlertActive = true;
 		isSuccessAlert = success;
