@@ -31,9 +31,9 @@
 	}
 
 	const logOutuser = () => {
-		localStorage.setItem('token', null);
+		$userToken = null;
 		isUserLoggedIn = false;
-		window.location.href = '/';
+		// window.location.href = '/';
 	};
 </script>
 
@@ -63,13 +63,14 @@
 			<div>
 				<a
 					href="/login"
-					class="bg-gray-500 inline-flex items-center py-2 px-3 text-md font-semibold text-center text-white  rounded-lg hover:bg-gray-700"
+					class="inline-flex items-center py-2 px-3 text-sm font-semibold text-center text-white bg-gray-500 rounded-lg hover:bg-gray-700"
 				>
 					Login
 				</a>
+
 				<a
 					href="/register"
-					class="inline-flex items-center py-2 px-3 text-md font-semibold text-center text-white bg-blue-500 rounded-lg hover:bg-blue-700"
+					class="inline-flex items-center py-2 px-3 text-sm font-semibold text-center text-white bg-blue-500 rounded-lg hover:bg-blue-700"
 				>
 					Register
 				</a>
