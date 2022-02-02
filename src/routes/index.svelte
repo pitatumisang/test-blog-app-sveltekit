@@ -23,15 +23,16 @@
 
 	export let posts;
 
-	let isUserLogin;
-	$: isUserLogin = false;
+	let isUserLoggedIn;
+	$: isUserLoggedIn = false;
 
-	if ($userToken !== null) {
-		isUserLogin = true;
+	$: if ($userToken !== null) {
+		isUserLoggedIn = true;
 	}
 
 	const logOutuser = () => {
 		localStorage.setItem('token', null);
+		isUserLoggedIn = false;
 		window.location.href = '/';
 	};
 </script>
@@ -43,17 +44,17 @@
 <section class="container mx-auto p-8">
 	<div class="flex justify-between items-center h-fit">
 		<h1 class="text-3xl font-bold mb-8">Posts</h1>
-		{#if isUserLogin}
+		{#if isUserLoggedIn}
 			<div>
 				<button
 					on:click={logOutuser}
-					class="bg-red-500 text-white text-md  font-semibold p-2 mr-4 rounded-md w-fit"
+					class="inline-flex items-center py-2 px-3 text-sm font-semibold text-center text-white bg-red-500 rounded-lg hover:bg-red-700"
 				>
 					Log Out
 				</button>
 				<a
 					href="/createPost"
-					class="bg-blue-500 text-white text-md  font-semibold p-2 rounded-md w-fit"
+					class="inline-flex items-center py-2 px-3 text-sm font-semibold text-center text-white bg-blue-500 rounded-lg hover:bg-blue-700"
 				>
 					Create New Post
 				</a>
@@ -62,13 +63,13 @@
 			<div>
 				<a
 					href="/login"
-					class="bg-gray-500 text-white text-md mr-4 font-semibold py-2 px-4 rounded-md w-fit"
+					class="bg-gray-500 inline-flex items-center py-2 px-3 text-md font-semibold text-center text-white  rounded-lg hover:bg-gray-700"
 				>
 					Login
 				</a>
 				<a
 					href="/register"
-					class="bg-blue-500 text-white text-md  font-semibold py-2 px-4 rounded-md w-fit"
+					class="inline-flex items-center py-2 px-3 text-md font-semibold text-center text-white bg-blue-500 rounded-lg hover:bg-blue-700"
 				>
 					Register
 				</a>
@@ -80,24 +81,25 @@
 		<div class="relative bg-white p-4 mb-4 rounded-md shadow-md">
 			<h3 class="font-bold mb-2">{post.title}</h3>
 			<p class="mb-4">{post.desc}</p>
+
 			<a
-				class="flex items-center bg-gray-500 text-white text-sm  font-semibold p-2 rounded-md w-fit"
 				href={`/posts/${post._id}`}
+				class="inline-flex items-center py-2 px-3 text-sm font-semibold text-center text-white bg-gray-500 rounded-lg hover:bg-gray-800 "
 			>
-				<span>Read More </span>
+				Read more
 				<svg
-					xmlns="http://www.w3.org/2000/svg"
-					class="h-5 w-5"
-					viewBox="0 0 20 20"
+					class="ml-2 -mr-1 w-4 h-4"
 					fill="currentColor"
-				>
-					<path
+					viewBox="0 0 20 20"
+					xmlns="http://www.w3.org/2000/svg"
+					><path
 						fill-rule="evenodd"
-						d="M10.293 5.293a1 1 0 011.414 0l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414-1.414L12.586 11H5a1 1 0 110-2h7.586l-2.293-2.293a1 1 0 010-1.414z"
+						d="M10.293 3.293a1 1 0 011.414 0l6 6a1 1 0 010 1.414l-6 6a1 1 0 01-1.414-1.414L14.586 11H3a1 1 0 110-2h11.586l-4.293-4.293a1 1 0 010-1.414z"
 						clip-rule="evenodd"
-					/>
-				</svg>
+					/></svg
+				>
 			</a>
+
 			<div class="absolute right-4 top-4">
 				<button class="mr-2">
 					<svg
