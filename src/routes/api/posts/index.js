@@ -1,11 +1,16 @@
-export const get = async () => {
-	const res = await fetch('http://localhost:5000/api/v1/posts');
+export const get = async ({ request }) => {
+	const res = await fetch('http://localhost:5000/api/v1/posts', {
+		method: 'GET',
+		headers: {
+			Authorization: `Bearer ${(userToken = null)}`
+		}
+	});
 
 	if (res.ok) {
-		const { posts } = await res.json();
+		const data = await res.json();
 
 		return {
-			body: posts
+			body: data
 		};
 	}
 };

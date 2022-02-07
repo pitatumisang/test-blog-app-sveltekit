@@ -1,12 +1,21 @@
 <script context="module">
+	import { userToken as token } from '../stores/stores.js';
+
 	export async function load({ fetch }) {
 		const resourceUrl = `/api/posts`;
-		const res = await fetch(resourceUrl);
+		const res = await fetch(resourceUrl, {
+			method: 'GET',
+			headers: {
+				'Content-Type': 'application/json'
+			}
+		});
 
 		if (res.ok) {
+			const { user, posts } = await res.json();
 			return {
 				props: {
-					posts: await res.json()
+					user,
+					posts
 				}
 			};
 		}
@@ -21,10 +30,12 @@
 <script>
 	import { userToken } from '../stores/stores';
 
+	export let user;
 	export let posts;
 
-	let isUserLoggedIn;
-	$: isUserLoggedIn = false;
+	console.log(`Loggin User: ${user}`);
+
+	let isUserLoggedIn = false;
 
 	$: if ($userToken !== null) {
 		isUserLoggedIn = true;
