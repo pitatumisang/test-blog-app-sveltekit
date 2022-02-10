@@ -1,4 +1,6 @@
 <script>
+	import { browser } from '$app/env';
+
 	import { userToken } from '../stores/stores';
 
 	const post = {
@@ -30,10 +32,15 @@
 			headers: {
 				'Content-Type': 'application/json'
 			},
-			body: JSON.stringify({ post, userToken: $userToken })
+			// body: JSON.stringify({ post, userToken: $userToken })
+			body: JSON.stringify({ post, userToken: browser && localStorage.getItem('token') })
 		});
 
 		const { success, msg } = await res.json();
+
+		if (!success && msg === 'Unauthorized') {
+			browser && localStorage.setItem('token', null);
+		}
 
 		if (success) {
 			post.title = '';

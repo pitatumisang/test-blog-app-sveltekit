@@ -44,7 +44,9 @@
 		alertMsg = msg;
 
 		token = resData.token;
+
 		$userToken = token;
+		localStorage.setItem('token', token);
 
 		setTimeout(() => {
 			isAlertActive = false;
