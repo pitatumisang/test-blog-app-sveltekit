@@ -31,3 +31,25 @@ export const del = async ({ params, request }) => {
 		body: resData
 	};
 };
+
+export const patch = async ({ params, request }) => {
+	const resourceUrl = `http://localhost:5000/api/v1/posts/${params.id}`;
+
+	const { post, userToken } = await request.json();
+
+	console.log(`Post: ${post}`);
+
+	const res = await fetch(resourceUrl, {
+		method: 'PATCH',
+		headers: {
+			'Content-Type': 'application/json',
+			Authorization: `Bearer ${userToken}`
+		},
+		body: JSON.stringify(post)
+	});
+
+	return {
+		status: res.status,
+		body: await res.json()
+	};
+};

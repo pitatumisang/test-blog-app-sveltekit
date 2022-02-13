@@ -88,10 +88,13 @@
 			isAlertActive = false;
 			alertMsg = '';
 		}, 3000);
-		setTimeout(() => {
-			// refresh
-			window.location.href = '/';
-		}, 500);
+
+		if (success) {
+			setTimeout(() => {
+				// refresh
+				window.location.href = '/';
+			}, 1000);
+		}
 	};
 </script>
 
@@ -245,68 +248,72 @@
 	{/if}
 	<!-- ALERT DIALOG END -->
 
-	{#each posts as post}
-		<div class="relative bg-white p-4 mb-4 rounded-md shadow-md">
-			<h3 class="font-bold mb-2">{post.title}</h3>
-			<p class="mb-4">{post.desc}</p>
+	{#if posts.length < 1}
+		<h1 class="text-2xl font-extrabold text-center">There are no posts yet!</h1>
+	{:else}
+		{#each posts as post}
+			<div class="relative bg-white p-4 mb-4 rounded-md shadow-md">
+				<h3 class="font-bold mb-2">{post.title}</h3>
+				<p class="mb-4">{post.desc}</p>
 
-			<a
-				href={`/posts/${post._id}`}
-				class="inline-flex items-center py-2 px-3 text-sm font-semibold text-center text-white bg-gray-500 rounded-lg hover:bg-gray-800 "
-			>
-				Read more
-				<svg
-					class="ml-2 -mr-1 w-4 h-4"
-					fill="currentColor"
-					viewBox="0 0 20 20"
-					xmlns="http://www.w3.org/2000/svg"
-					><path
-						fill-rule="evenodd"
-						d="M10.293 3.293a1 1 0 011.414 0l6 6a1 1 0 010 1.414l-6 6a1 1 0 01-1.414-1.414L14.586 11H3a1 1 0 110-2h11.586l-4.293-4.293a1 1 0 010-1.414z"
-						clip-rule="evenodd"
-					/></svg
+				<a
+					href={`/posts/${post._id}`}
+					class="inline-flex items-center py-2 px-3 text-sm font-semibold text-center text-white bg-gray-500 rounded-lg hover:bg-gray-800 "
 				>
-			</a>
-
-			<div class="absolute right-4 top-4">
-				<button class="mr-2">
+					Read more
 					<svg
+						class="ml-2 -mr-1 w-4 h-4"
+						fill="currentColor"
+						viewBox="0 0 20 20"
 						xmlns="http://www.w3.org/2000/svg"
-						class=" text-blue-500 h-6 w-6"
-						fill="none"
-						viewBox="0 0 24 24"
-						stroke="currentColor"
+						><path
+							fill-rule="evenodd"
+							d="M10.293 3.293a1 1 0 011.414 0l6 6a1 1 0 010 1.414l-6 6a1 1 0 01-1.414-1.414L14.586 11H3a1 1 0 110-2h11.586l-4.293-4.293a1 1 0 010-1.414z"
+							clip-rule="evenodd"
+						/></svg
 					>
-						<path
-							stroke-linecap="round"
-							stroke-linejoin="round"
-							stroke-width="2"
-							d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"
-						/>
-					</svg>
-				</button>
+				</a>
 
-				<button
-					on:click={() => {
-						deletePost(post._id);
-					}}
-				>
-					<svg
-						xmlns="http://www.w3.org/2000/svg"
-						class="text-red-500 h-6 w-6"
-						fill="none"
-						viewBox="0 0 24 24"
-						stroke="currentColor"
+				<div class="absolute flex items-center right-4 top-4">
+					<a href={`posts/${post._id}/edit`} class="mr-2">
+						<svg
+							xmlns="http://www.w3.org/2000/svg"
+							class=" text-blue-500 h-6 w-6"
+							fill="none"
+							viewBox="0 0 24 24"
+							stroke="currentColor"
+						>
+							<path
+								stroke-linecap="round"
+								stroke-linejoin="round"
+								stroke-width="2"
+								d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"
+							/>
+						</svg>
+					</a>
+
+					<button
+						on:click={() => {
+							deletePost(post._id);
+						}}
 					>
-						<path
-							stroke-linecap="round"
-							stroke-linejoin="round"
-							stroke-width="2"
-							d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"
-						/>
-					</svg>
-				</button>
+						<svg
+							xmlns="http://www.w3.org/2000/svg"
+							class="text-red-500 h-6 w-6"
+							fill="none"
+							viewBox="0 0 24 24"
+							stroke="currentColor"
+						>
+							<path
+								stroke-linecap="round"
+								stroke-linejoin="round"
+								stroke-width="2"
+								d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"
+							/>
+						</svg>
+					</button>
+				</div>
 			</div>
-		</div>
-	{/each}
+		{/each}
+	{/if}
 </section>

@@ -1,16 +1,36 @@
+<script context="module">
+	export async function load({ params, fetch }) {
+		const res = await fetch(`/api/posts/${params.id}`);
+
+		if (res.ok) {
+			return {
+				props: {
+					postDetails: await res.json()
+				}
+			};
+		}
+
+		return {
+			status: res.status,
+			error: new Error(`Could not load url`)
+		};
+	}
+</script>
+
 <script>
 	import { browser } from '$app/env';
+	export let postDetails;
 
 	const post = {
-		title: '',
-		desc: ''
+		title: postDetails.title,
+		desc: postDetails.desc
 	};
 
 	let isAlertActive = false;
 	let isSuccessAlert = false;
 	let alertMsg = '';
 
-	const createNewPost = async () => {
+	const updatePost = async () => {
 		if (post.title === '' || post.desc === '') {
 			isAlertActive = true;
 			isSuccessAlert = false;
@@ -24,13 +44,12 @@
 			return;
 		}
 
-		// save the post
-		const res = await fetch('/api/posts', {
-			method: 'POST',
+		// update the post
+		const res = await fetch(`/api/posts/${postDetails._id}`, {
+			method: 'PATCH',
 			headers: {
 				'Content-Type': 'application/json'
 			},
-			// body: JSON.stringify({ post, userToken: $userToken })
 			body: JSON.stringify({ post, userToken: browser && localStorage.getItem('token') })
 		});
 
@@ -38,11 +57,6 @@
 
 		if (!success && msg === 'Unauthorized') {
 			browser && localStorage.setItem('token', null);
-		}
-
-		if (success) {
-			post.title = '';
-			post.desc = '';
 		}
 
 		isAlertActive = true;
@@ -78,7 +92,10 @@
 	<section
 		class="container mx-auto p-10 max-w-2xl bg-white rounded-lg border border-gray-200 shadow-md"
 	>
-		<h3 class="text-xl font-medium text-gray-900 dark:text-white">Create a New Post</h3>
+		<h3 class="text-xl font-medium text-gray-900 dark:text-white">
+			Update Post: <span class="text-sm font-bold text-gray-600">{postDetails._id}</span>
+		</h3>
+
 		<div class="my-4">
 			{#if isAlertActive && !isSuccessAlert}
 				<div
@@ -122,7 +139,7 @@
 				</div>
 			{/if}
 		</div>
-		<form class="space-y-6 " on:submit|preventDefault={createNewPost}>
+		<form class="space-y-6 " on:submit|preventDefault={updatePost}>
 			<div>
 				<label for="title" class="block mb-2 text-sm font-semibold text-gray-900 ">Post Title</label
 				>
@@ -150,7 +167,7 @@
 			<button
 				type="submit"
 				class="w-full text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-semibold rounded-lg text-sm px-5 py-2.5 text-center"
-				>Create a post</button
+				>Update a post</button
 			>
 		</form>
 	</section>
