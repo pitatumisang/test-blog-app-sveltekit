@@ -42,7 +42,7 @@
 	<h1 class="text-sm my-4 font-bold">ID: {post._id}</h1>
 	<p>{post.desc}</p>
 
-	<div class="flex items-center mt-4">
+	<!-- <div class="flex items-center mt-4">
 		<a href={`#`} class="mr-2">
 			<svg
 				xmlns="http://www.w3.org/2000/svg"
@@ -80,5 +80,5 @@
 				/>
 			</svg>
 		</button>
-	</div>
+	</div> -->
 </section>

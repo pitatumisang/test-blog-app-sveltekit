@@ -1,19 +1,21 @@
-export const get = async ({ request }) => {
-	const res = await fetch('http://localhost:5000/api/v1/posts', {
-		method: 'GET',
-		headers: {
-			Authorization: `Bearer ${(userToken = null)}`
-		}
-	});
+// export const get = async ({ request }) => {
+// 	console.log(request.headers);
 
-	if (res.ok) {
-		const data = await res.json();
+// 	const res = await fetch('http://localhost:5000/api/v1/posts', {
+// 		method: 'GET',
+// 		headers: {
+// 			Authorization: `Bearer ${(userToken = null)}`
+// 		}
+// 	});
 
-		return {
-			body: data
-		};
-	}
-};
+// 	if (res.ok) {
+// 		const data = await res.json();
+
+// 		return {
+// 			body: data
+// 		};
+// 	}
+// };
 
 export const post = async ({ request }) => {
 	const { post, userToken } = await request.json();

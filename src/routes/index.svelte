@@ -1,4 +1,4 @@
-<script context="module">
+<!-- <script context="module">
 	export async function load({ fetch }) {
 		const resourceUrl = `/api/posts`;
 		const res = await fetch(resourceUrl, {
@@ -24,14 +24,15 @@
 			error: new Error(`Could not load url`)
 		};
 	}
-</script>
-
+</script> -->
 <script>
 	import { userToken } from '../stores/stores';
 	import { browser } from '$app/env';
+	import { onMount } from 'svelte';
+	import { post } from './api/auth/login';
 
-	export let user;
-	export let posts;
+	let userDetails = {};
+	let postsList = [];
 
 	let isUserLoggedIn = false;
 
@@ -39,6 +40,26 @@
 	let isAlertActive = false;
 	let isSuccessAlert = false;
 	let alertMsg = '';
+
+	onMount(async () => {
+		// Get posts from the api
+		const res = await fetch('http://localhost:5000/api/v1/posts', {
+			method: 'GET',
+			headers: {
+				'Content-Type': 'application/json',
+				Authorization: `Bearer ${browser && localStorage.getItem('token')}`
+			}
+		});
+
+		console.log(res);
+
+		if (res.ok) {
+			const { success, count, posts, user } = await res.json();
+
+			userDetails = user;
+			postsList = posts;
+		}
+	});
 
 	$: if (
 		(browser && localStorage.getItem('token') === 'null') ||
@@ -248,10 +269,10 @@
 	{/if}
 	<!-- ALERT DIALOG END -->
 
-	{#if posts.length < 1}
+	{#if postsList.length < 1}
 		<h1 class="text-2xl font-extrabold text-center">There are no posts yet!</h1>
 	{:else}
-		{#each posts as post}
+		{#each postsList as post}
 			<div class="relative bg-white p-4 mb-4 rounded-md shadow-md">
 				<h3 class="font-bold mb-2">{post.title}</h3>
 				<p class="mb-4">{post.desc}</p>
@@ -274,45 +295,47 @@
 					>
 				</a>
 
-				<div class="absolute flex items-center right-4 top-4">
-					<a href={`posts/${post._id}/edit`} class="mr-2">
-						<svg
-							xmlns="http://www.w3.org/2000/svg"
-							class=" text-blue-500 h-6 w-6"
-							fill="none"
-							viewBox="0 0 24 24"
-							stroke="currentColor"
-						>
-							<path
-								stroke-linecap="round"
-								stroke-linejoin="round"
-								stroke-width="2"
-								d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"
-							/>
-						</svg>
-					</a>
+				{#if userDetails && userDetails.userId === post.createdBy}
+					<div class="absolute flex items-center right-4 top-4">
+						<a href={`posts/${post._id}/edit`} class="mr-2">
+							<svg
+								xmlns="http://www.w3.org/2000/svg"
+								class=" text-blue-500 h-6 w-6"
+								fill="none"
+								viewBox="0 0 24 24"
+								stroke="currentColor"
+							>
+								<path
+									stroke-linecap="round"
+									stroke-linejoin="round"
+									stroke-width="2"
+									d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"
+								/>
+							</svg>
+						</a>
 
-					<button
-						on:click={() => {
-							deletePost(post._id);
-						}}
-					>
-						<svg
-							xmlns="http://www.w3.org/2000/svg"
-							class="text-red-500 h-6 w-6"
-							fill="none"
-							viewBox="0 0 24 24"
-							stroke="currentColor"
+						<button
+							on:click={() => {
+								deletePost(post._id);
+							}}
 						>
-							<path
-								stroke-linecap="round"
-								stroke-linejoin="round"
-								stroke-width="2"
-								d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"
-							/>
-						</svg>
-					</button>
-				</div>
+							<svg
+								xmlns="http://www.w3.org/2000/svg"
+								class="text-red-500 h-6 w-6"
+								fill="none"
+								viewBox="0 0 24 24"
+								stroke="currentColor"
+							>
+								<path
+									stroke-linecap="round"
+									stroke-linejoin="round"
+									stroke-width="2"
+									d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"
+								/>
+							</svg>
+						</button>
+					</div>
+				{/if}
 			</div>
 		{/each}
 	{/if}
